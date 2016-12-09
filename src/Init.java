@@ -12,14 +12,18 @@ import javax.mail.MessagingException;
 
 public class Init {
 	public static void main(String[] args) throws IOException, MessagingException {
-		File dir = new File("bin\\Mails");
+		ArrayList<Mail> mails = processDataFiles("bin\\Mails");
+	}
+
+	private static ArrayList<Mail> processDataFiles(String location) throws IOException, MessagingException {
+		File dir = new File(location);
 		System.out.println(dir.getAbsolutePath());
-	
+		ArrayList<Mail> mails = null;
 		File[] files = dir.listFiles();
 		if(dir.isDirectory()) {
 		for (File file : files) {
 			try{
-			    ArrayList<Mail> mails = new ArrayList<Mail>();
+			    mails = new ArrayList<Mail>();
 		
 			    Mail parsedMail = GetMailFromFile(file);
 			    mails.add(parsedMail);
@@ -33,6 +37,7 @@ public class Init {
 			    }
 			}
 		}
+		return mails;
 	}
 	
 	private static Mail GetMailFromFile(File file) throws IOException, MessagingException{
