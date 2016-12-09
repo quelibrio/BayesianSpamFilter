@@ -8,8 +8,10 @@ import java.io.Reader;
 import java.util.ArrayList;
 import java.util.Scanner;
 
+import javax.mail.MessagingException;
+
 public class Init {
-	public static void main(String[] args) throws IOException {
+	public static void main(String[] args) throws IOException, MessagingException {
 		File dir = new File("bin\\Mails");
 		System.out.println(dir.getAbsolutePath());
 	
@@ -21,7 +23,7 @@ public class Init {
 		
 			    Mail parsedMail = GetMailFromFile(file);
 			    mails.add(parsedMail);
-					System.out.println(parsedMail.body);
+					//System.out.println(parsedMail.body);
 				}
 				catch(FileNotFoundException ex){
 					
@@ -33,7 +35,7 @@ public class Init {
 		}
 	}
 	
-	private static Mail GetMailFromFile(File file) throws IOException{
+	private static Mail GetMailFromFile(File file) throws IOException, MessagingException{
 	    String path = file.getPath();
 	    FileInputStream fis = new FileInputStream(file);
 	    byte[] data = new byte[(int) file.length()];
