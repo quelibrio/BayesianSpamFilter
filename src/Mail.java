@@ -11,6 +11,8 @@ import javax.mail.MessagingException;
 import javax.mail.Session;
 import javax.mail.internet.MimeMessage;
 
+import org.jsoup.Jsoup;
+
 public class Mail {
 	public boolean spam;
 	public String body;
@@ -27,7 +29,9 @@ public class Mail {
 		MimeMessage message = new MimeMessage(s, is);
 		message.getAllHeaderLines();
 		
-		this.body = message.getContent().toString();
+		String parsedBody = message.getContent().toString();
+		this.body =  Jsoup.parse(parsedBody).text();
+		
 		String[] words = body.split("\\W+");
 		for (String w : words) {
 		       Integer n = wordsMap.get(w);
