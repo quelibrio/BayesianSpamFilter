@@ -44,8 +44,8 @@ public class NaiveBayes {
 			}
 		}
 		
-		this.PriorHam = (double)hamMailsCount / (hamMailsCount + spamMailsCount);
-		this.PriorSpam = (double)spamMailsCount / (hamMailsCount + spamMailsCount);
+		//this.PriorHam = (double)hamMailsCount / (hamMailsCount + spamMailsCount);
+		this.PriorSpam = ((double)spamMailsCount+2) / (hamMailsCount + spamMailsCount+2);
 		System.out.print("P(HAM): " + PriorHam +" P(SPAM) " + PriorSpam);
 	}
 	
@@ -56,14 +56,14 @@ public class NaiveBayes {
 		if(spamWords.containsKey(word))
 			countInSpam +=spamWords.get(word);
 		
-		double PosteriorSpam = (double)countInSpam/(spamMailsCount);
+		double PosteriorSpam = ((double)countInSpam+1)/(spamMailsCount+2); // "+1" is for smoothing.
 		
 		int countInHam =0;
 		if(hamWords.containsKey(word))
 			countInHam += hamWords.get(word);
 		
-		double PWord = (double)(countInHam + countInSpam)/(hamMailsCount + spamMailsCount);
-		double PosteriorHam = (double)countInHam/(hamMailsCount);
+		double PWord = (double)(countInHam + countInSpam+1)/(hamMailsCount + spamMailsCount+2); // "+1" is for smoothing.
+		//double PosteriorHam = (double)countInHam/(hamMailsCount);
 				
 		if(PWord == 0)
 			return 0;
@@ -72,16 +72,46 @@ public class NaiveBayes {
 	}
 	
 	public boolean PredictIfSpam(Mail mail){
-		double sum=0;
-		int count=mail.wordsMap.keySet().size();
-		for(String word: mail.wordsMap.keySet()){
-			System.out.println(word + ": " + GetProbabilityWordInSpam(word));
-			sum+=GetProbabilityWordInSpam(word);
+		double spamProbability=1.0;
+		double hamProbability=1.0;
+		double wordLikelihood;
+		int tempCount=0;
+		//int count=mail.wordsMap.keySet().size();
+		for(String word: spamWords.keySet()){
+			if (mail.wordsMap.containsKey(word)){
+				wordLikelihood=GetProbabilityWordInSpam(word);
+				if(GetProbabilityWordInSpam(word)==0.0){
+					System.out.println("word: " + word + " is zero.");
+				}
+				//
+			}
+			else{
+				wordLikelihood=1.0-GetProbabilityWordInSpam(word);
+				if(GetProbabilityWordInSpam(word)==1.0){
+					System.out.println("word: " + word + " is one.");
+				}
+			}
+			spamProbability*=wordLikelihood;
 		}
-		
-		if (count!=0){
-			System.out.println("Average : " + sum/count);
+		System.out.println("Spam probability: " + spamProbability);
+		//====
+		for(String word: hamWords.keySet()){
+			if (mail.wordsMap.containsKey(word)){
+				wordLikelihood=GetProbabilityWordInSpam(word);
+				//
+			}
+			else{
+				wordLikelihood=1.0-GetProbabilityWordInSpam(word);
+			}
+			hamProbability*=wordLikelihood;
 		}
-		return false;
+		System.out.println("Ham probability: " + hamProbability);
+		//===
+		if(spamProbability>hamProbability){
+			return true;
+		}
+		else{
+			return false;
+		}
 	}
 }
