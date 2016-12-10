@@ -4,8 +4,8 @@ import java.util.List;
 import java.util.Map;
 
 public class NaiveBayes {
-	int spamWordsCount = 0;
-	int hamWordsCount = 0;
+	int spamMailsCount = 0;
+	int hamMailsCount = 0;
 	public Map<String, Integer> spamWords;
 	public Map<String, Integer> hamWords;
 	double PriorHam;
@@ -21,39 +21,49 @@ public class NaiveBayes {
 		for (Mail mail : mails) {
 			
 			if(mail.spam == true){
-				for (float f : mail.wordsMap.values()) {
-					spamWordsCount += f;
+				spamMailsCount++;
+				for(String word:mail.wordsMap.keySet()){
+					if (spamWords.containsKey(word)){
+						spamWords.put(word, spamWords.get(word)+1);
+					}
+					else{
+						spamWords.put(word, 1);
+					}
 				}
-				spamWords.putAll(mail.wordsMap);
 			}
 			else {
-				for (float f : mail.wordsMap.values()) {
-					hamWordsCount += f;
+				hamMailsCount++;
+				for(String word:mail.wordsMap.keySet()){
+					if (hamWords.containsKey(word)){
+						hamWords.put(word, hamWords.get(word)+1);
+					}
+					else{
+						hamWords.put(word, 1);
+					}
 				}
-				hamWords.putAll(mail.wordsMap);
 			}
 		}
 		
-		this.PriorHam = (double)hamWordsCount / (hamWordsCount + spamWordsCount);
-		this.PriorSpam = (double)spamWordsCount / (hamWordsCount + spamWordsCount);
+		this.PriorHam = (double)hamMailsCount / (hamMailsCount + spamMailsCount);
+		this.PriorSpam = (double)spamMailsCount / (hamMailsCount + spamMailsCount);
 		System.out.print("P(HAM): " + PriorHam +" P(SPAM) " + PriorSpam);
 	}
 	
 	public double GetProbabilityWordInSpam(String word){
-		word = word.toLowerCase();
+		//word = word.toLowerCase();
 		
 		int countInSpam = 0;
 		if(spamWords.containsKey(word))
 			countInSpam +=spamWords.get(word);
 		
-		double PosteriorSpam = (double)countInSpam/(spamWordsCount);
+		double PosteriorSpam = (double)countInSpam/(spamMailsCount);
 		
 		int countInHam =0;
 		if(hamWords.containsKey(word))
 			countInHam += hamWords.get(word);
 		
-		double PWord = (double)(countInHam + countInSpam)/(hamWordsCount + spamWordsCount);
-		double PosteriorHam = (double)countInHam/(hamWordsCount);
+		double PWord = (double)(countInHam + countInSpam)/(hamMailsCount + spamMailsCount);
+		double PosteriorHam = (double)countInHam/(hamMailsCount);
 				
 		if(PWord == 0)
 			return 0;
@@ -62,8 +72,15 @@ public class NaiveBayes {
 	}
 	
 	public boolean PredictIfSpam(Mail mail){
+		double sum=0;
+		int count=mail.wordsMap.keySet().size();
 		for(String word: mail.wordsMap.keySet()){
 			System.out.println(word + ": " + GetProbabilityWordInSpam(word));
+			sum+=GetProbabilityWordInSpam(word);
+		}
+		
+		if (count!=0){
+			System.out.println("Average : " + sum/count);
 		}
 		return false;
 	}
