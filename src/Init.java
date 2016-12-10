@@ -13,17 +13,20 @@ import javax.mail.MessagingException;
 public class Init {
 	public static void main(String[] args) throws IOException, MessagingException {
 		ArrayList<Mail> mails = processDataFiles("bin\\Mails");
+		NaiveBayes bayse = new NaiveBayes();
+		bayse.Train(mails);
+		Mail testMail = processDataFiles("bin\\TestMails").get(0);
+		bayse.PredictIfSpam(testMail);
 	}
-
+	
 	private static ArrayList<Mail> processDataFiles(String location) throws IOException, MessagingException {
 		File dir = new File(location);
 		System.out.println(dir.getAbsolutePath());
-		ArrayList<Mail> mails = null;
+		ArrayList<Mail> mails = new ArrayList<Mail>();;
 		File[] files = dir.listFiles();
 		if(dir.isDirectory()) {
 		for (File file : files) {
 			try{
-			    mails = new ArrayList<Mail>();
 		
 			    Mail parsedMail = GetMailFromFile(file);
 			    mails.add(parsedMail);
@@ -49,12 +52,12 @@ public class Init {
 	    
 	    Mail mail; 
 	    String messageData = new String(data);
-	    if(path.contains("spam")){
-	    	//Spam mail
-	    	mail = new Mail(true, messageData);
-	    }else{
+	    if(path.contains("ham")){
 	    	//Ham mail
 	    	mail = new Mail(false, messageData);
+	    }else{
+	    	//Spam mail
+	    	mail = new Mail(true, messageData);
 	    }
 	    return mail;
 	}
