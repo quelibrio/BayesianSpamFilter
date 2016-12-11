@@ -22,7 +22,7 @@ public class NaiveBayes {
 	public void Train(List<Mail> mails){
 		for (Mail mail : mails) {
 			
-			if(mail.spam == true){
+			if(mail.isSpam == true){
 				spamMailsCount++;
 				for(String word:mail.wordsMap.keySet()){
 					if (spamWords.containsKey(word)){
@@ -60,53 +60,40 @@ public class NaiveBayes {
 	}
 	
 	public double GetProbabilityWord(String word, boolean isSpam){
-		//word = word.toLowerCase();
-		
+		//word = word.toLowerCase();		
 		int countInSpam = 0;
 		if(spamWords.containsKey(word))
 			countInSpam +=spamWords.get(word);
-		
-		double PosteriorSpam = ((double)countInSpam+1)/(hamMailsCount+spamMailsCount+2); // "+1" is for smoothing. 
-		
+
 		int countInHam =0;
 		if(hamWords.containsKey(word))
 			countInHam += hamWords.get(word);
-		
-		double PosteriorHam = ((double)countInHam+1)/(hamMailsCount+spamMailsCount+2);
-		
+				
 		double PWord = (double)(countInHam + countInSpam+1)/(hamMailsCount + spamMailsCount+2); // "+1" is for smoothing.
 				
 		if(PWord == 0)
 			return 0;
-		
-		/*double returnValue=(PosteriorSpam * PriorSpam) / PWord;
-		if (returnValue>1.0){
-			returnValue=1.0;
-		}
-		else if(returnValue<0.0){
-			returnValue=0.0;
-		}*/
+
 		if(isSpam){
-			//return (PosteriorSpam * PriorSpam) / PWord;
+			double PosteriorSpam = ((double)countInSpam+1)/(hamMailsCount+spamMailsCount+2); // "+1" is for smoothing. 
 			return PosteriorSpam;
 		}
 		else{
-			//return (PosteriorHam * PriorHam) / PWord;
+			double PosteriorHam = ((double)countInHam+1)/(hamMailsCount+spamMailsCount+2);
 			return PosteriorHam;
-		}
-		
+		}	
 	}
 	
 	public boolean PredictIfSpam(Mail mail){
-		double spamProbability=1.0;
-		double hamProbability=1.0;
 		double spamWordLikelihood;
 		double hamWordLikelihood;
+		
 		double spamlogLikelihood=0.0;
 		double hamlogLikelihood=0.0;
+		
 		int tempCount=0;
 		int maxcount=25;
-		//int count=mail.wordsMap.keySet().size();
+
 		for(String word: allWords.keySet()){
 			if (mail.wordsMap.containsKey(word)){
 				spamWordLikelihood=GetProbabilityWord(word, true);
@@ -124,13 +111,12 @@ public class NaiveBayes {
 				System.out.println("Ham probability at count "+maxcount+": " + Math.exp(hamWordLikelihood));
 			}
 		}
-		spamProbability=spamlogLikelihood;
-		hamProbability=hamlogLikelihood;
-		System.out.println("Spam probability: " + spamProbability);
-		System.out.println("Ham probability: " + hamProbability);
-		//====
+
+		System.out.println("Spam likehood log: " + spamlogLikelihood);
+		System.out.println("Ham likehood log: " + hamlogLikelihood);
+
 		//System.out.println("Total Spams "+spamWords.keySet().size()+" Total Hams " + hamWords.keySet().size());
-		if(spamProbability>hamProbability){
+		if(spamlogLikelihood>hamlogLikelihood){
 			System.out.println("Email is SPAM");
 			return true;
 		}

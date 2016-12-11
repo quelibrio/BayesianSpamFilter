@@ -14,14 +14,14 @@ import javax.mail.internet.MimeMessage;
 import org.jsoup.Jsoup;
 
 public class Mail {
-	public boolean spam;
+	public boolean isSpam;
 	public String body;
 	public Enumeration<Header> headers; 
 	public Map<String, Integer> wordsMap;
 	
 	public Mail(boolean spam, String unformatted) throws MessagingException, IOException{
 		this.wordsMap = new HashMap<>();
-		this.spam = spam;
+		this.isSpam = spam;
 		
 		Properties props = new Properties();
 	    props.put("mail.smtp.host", "my-mail-server");
@@ -44,7 +44,7 @@ public class Mail {
 		 
 		//For printing purposes
 		int end = body.length() > 200 ? 200 : body.length();
-		System.out.println("><><><><><><><><><><><><>Start of message<><><><><><><><><><><><><><><" + this.spam);
+		System.out.println("><><><><><><><><><><><><>Start of message<><><><><><><><><><><><><><><" + this.isSpam);
 		System.out.println("Message size: " + message.getSize() + "Word count: " + words.length + "Different words: " + wordsMap.keySet().size());
 		System.out.println(body.substring(0, end));
 		System.out.println("-----//---------//---------");
@@ -52,7 +52,7 @@ public class Mail {
 		//Extract headers
 		for (Enumeration<Header> e = message.getAllHeaders(); e.hasMoreElements();) {
 		    Header h = e.nextElement();
-		    System.out.println(h.getName() + " $#$ " +    h.getValue());
+		    //System.out.println(h.getName() + " $#$ " +    h.getValue());
 
 		}
 		System.out.println("><><><><><><><><><><><><>End of message<><><><><><><><><><><><><><><");
