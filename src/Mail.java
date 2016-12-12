@@ -35,11 +35,10 @@ public class Mail {
 		
 		String[] words = body.split("\\W+");
 		for (String w : words) {
-			   //w = w.toLowerCase();
-		       //Integer n = wordsMap.get(w);
-		       //n = (n == null) ? 1 : ++n;
-		       //wordsMap.put(w, n);
-		       wordsMap.put(w, 1);
+			   w = w.toLowerCase();
+		       Integer n = wordsMap.get(w);
+		       n = (n == null) ? 1 : ++n;
+		       wordsMap.put(w, n);
 		}
 		 
 		//For printing purposes
