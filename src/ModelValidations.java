@@ -4,10 +4,15 @@ import java.util.List;
 
 public class ModelValidations {
 	public static double CrossValidateKFold(List<Mail> mails, int folds) {
+		System.out.println("===Cross Validate K-Fold===");
 		//=======
 		Collections.shuffle(mails);
 		//=======
-		System.out.println("===Stratified K-Fold===");
+		return KFoldTest(mails, folds);
+	}
+	
+	private static double KFoldTest(List<Mail> mails, int folds) {
+		
 		double accuracySum=0.0;
 		for (int i=0;i<folds;i++){
 			int foldStart=i*mails.size()/folds;
@@ -29,5 +34,38 @@ public class ModelValidations {
 		}
 		return accuracySum/folds;
 	}
-
+	
+	public static double StratifiedKFold(List<Mail> mails, int folds) {
+		System.out.println("===Stratified K-Fold===");
+		List<Mail> HamMails= new ArrayList<Mail>();
+		List<Mail> SpamMails= new ArrayList<Mail>();
+		for (Mail mail : mails) {
+			if (mail.isSpam){
+				SpamMails.add(mail);
+			}
+			else{
+				HamMails.add(mail);
+			}
+		}
+		Collections.shuffle(HamMails);
+		Collections.shuffle(SpamMails);
+		List<Mail> StratifiedMails= new ArrayList<Mail>();
+		for (int i=0;i<folds;i++){
+			List<Mail> StratifiedSubMails= new ArrayList<Mail>();
+			//===
+			int foldStart=i*HamMails.size()/folds;
+			int foldEnd=((i+1)*HamMails.size()/folds)-1;
+			StratifiedSubMails.addAll(HamMails.subList(foldStart, foldEnd));
+			//===
+			foldStart=i*SpamMails.size()/folds;
+			foldEnd=((i+1)*SpamMails.size()/folds)-1;
+			StratifiedSubMails.addAll(SpamMails.subList(foldStart, foldEnd));
+			//===
+			Collections.shuffle(StratifiedSubMails);
+			StratifiedMails.addAll(StratifiedSubMails);
+		}
+		
+		return KFoldTest(StratifiedMails, folds);
+	}
+	
 }

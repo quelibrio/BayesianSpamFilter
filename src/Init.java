@@ -23,6 +23,8 @@ public class Init {
 		ArrayList<Mail> AllMails = processDataFiles("bin\\Mails");
 		double kFoldAccuracy=ModelValidations.CrossValidateKFold(AllMails,10);
 		System.out.println("Average Accuracy Overall: "+kFoldAccuracy);
+		kFoldAccuracy=ModelValidations.StratifiedKFold(AllMails,10);
+		System.out.println("Average Accuracy Overall: "+kFoldAccuracy);
 	}
 	
 	private static ArrayList<Mail> processDataFiles(String location) throws IOException, MessagingException {
