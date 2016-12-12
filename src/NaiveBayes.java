@@ -18,7 +18,6 @@ public class NaiveBayes {
 		this.allWords = new HashMap<String, Integer>();
 	}
 	
-	
 	public void Train(List<Mail> mails){
 		for (Mail mail : mails) {
 			
@@ -53,6 +52,42 @@ public class NaiveBayes {
 				}
 			}
 		}
+		}
+		
+		public void TrainMultinomial(List<Mail> mails){
+			for (Mail mail : mails) {
+				
+				if(mail.isSpam == true){
+					spamMailsCount++;
+					for(String word:mail.wordsMap.keySet()){
+						if (spamWords.containsKey(word)){
+							spamWords.put(word, spamWords.get(word) + mail.wordsMap.get(word));
+						}
+						else{
+							spamWords.put(word, mail.wordsMap.get(word));
+						}
+					}
+				}
+				else {
+					hamMailsCount++;
+					for(String word:mail.wordsMap.keySet()){
+						if (hamWords.containsKey(word)){
+							hamWords.put(word, hamWords.get(word) + mail.wordsMap.get(word));
+						}
+						else{
+							hamWords.put(word, mail.wordsMap.get(word));
+						}
+					}
+				}
+				for(String word:mail.wordsMap.keySet()){
+					if (allWords.containsKey(word)){
+						allWords.put(word, allWords.get(word) + mail.wordsMap.get(word));
+					}
+					else{
+						allWords.put(word, + mail.wordsMap.get(word));
+					}
+				}
+			}
 		
 		this.PriorHam = (double)hamMailsCount / (hamMailsCount + spamMailsCount);
 		this.PriorSpam = ((double)spamMailsCount) / (hamMailsCount + spamMailsCount);
@@ -69,10 +104,9 @@ public class NaiveBayes {
 		if(hamWords.containsKey(word))
 			countInHam += hamWords.get(word);
 				
-		double PWord = (double)(countInHam + countInSpam+1)/(hamMailsCount + spamMailsCount+2); // "+1" is for smoothing.
-				
-		if(PWord == 0)
-			return 0;
+//		double PWord = (double)(countInHam + countInSpam+1)/(hamMailsCount + spamMailsCount+2); // "+1" is for smoothing.
+//		if(PWord == 0)
+//			return 0;
 
 		if(isSpam){
 			double PosteriorSpam = ((double)countInSpam+1)/(hamMailsCount+spamMailsCount+2); // "+1" is for smoothing. 
@@ -80,6 +114,30 @@ public class NaiveBayes {
 		}
 		else{
 			double PosteriorHam = ((double)countInHam+1)/(hamMailsCount+spamMailsCount+2);
+			return PosteriorHam;
+		}	
+	}
+	
+	public double GetProbabilityWordMultinomial(String word, boolean isSpam){
+		//word = word.toLowerCase();		
+		int countInSpam = 0;
+		if(spamWords.containsKey(word))
+			countInSpam +=spamWords.get(word);
+
+		int countInHam =0;
+		if(hamWords.containsKey(word))
+			countInHam += hamWords.get(word);
+		
+		int countInAll = 0;
+		if(allWords.containsKey(word))
+			countInAll = allWords.get(word);
+
+		if(isSpam){
+			double PosteriorSpam = ((double)countInSpam+1)/(countInAll + 2); // "+1" is for smoothing. 
+			return PosteriorSpam;
+		}
+		else{
+			double PosteriorHam = ((double)countInHam+1)/(countInAll + 2);
 			return PosteriorHam;
 		}	
 	}
@@ -101,9 +159,6 @@ public class NaiveBayes {
 		
 		double spamlogLikelihood=0.0;
 		double hamlogLikelihood=0.0;
-		
-		int tempCount=0;
-		int maxcount=25;
 
 		for(String word: allWords.keySet()){
 			if (mail.wordsMap.containsKey(word)){
@@ -116,11 +171,40 @@ public class NaiveBayes {
 			}
 			spamlogLikelihood+=Math.log(spamWordLikelihood);
 			hamlogLikelihood+=Math.log(hamWordLikelihood);
-			tempCount++;
-			if (tempCount==maxcount){
-				//System.out.println("Spam probability at count "+maxcount+": " + Math.exp(spamWordLikelihood));
-				//System.out.println("Ham probability at count "+maxcount+": " + Math.exp(hamWordLikelihood));
-			}
+
+		}
+
+		//System.out.println("Spam likehood log: " + spamlogLikelihood);
+		//System.out.println("Ham likehood log: " + hamlogLikelihood);
+
+		//System.out.println("Total Spams "+spamWords.keySet().size()+" Total Hams " + hamWords.keySet().size());
+		if(spamlogLikelihood>hamlogLikelihood){
+			//System.out.println("Email is SPAM");
+			return true;
+		}
+		else{
+			//System.out.println("Email is HAM");
+			return false;
+		}
+	}
+	
+	public boolean PredictIfSpamMultinomial(Mail mail){
+		double spamWordLikelihood;
+		double hamWordLikelihood;
+		
+		double spamlogLikelihood=0.0;
+		double hamlogLikelihood=0.0;
+		int totalOccurances = 0;
+		for(String word: allWords.keySet()){
+			int occurances = 0;
+			if(mail.wordsMap.containsKey(word))
+				occurances = mail.wordsMap.get(word);
+			
+			spamWordLikelihood=GetProbabilityWordMultinomial(word, true);
+			hamWordLikelihood=GetProbabilityWordMultinomial(word, false);
+
+			spamlogLikelihood+=Math.log(spamWordLikelihood);
+			hamlogLikelihood+=Math.log(hamWordLikelihood);
 		}
 
 		//System.out.println("Spam likehood log: " + spamlogLikelihood);

@@ -26,7 +26,7 @@ public class ModelValidations {
 				TrainMails.addAll(mails.subList(foldEnd+1, mails.size()-1));
 			}
 			NaiveBayes bayse = new NaiveBayes();
-			bayse.Train(TrainMails);
+			bayse.TrainMultinomial(TrainMails);
 			double foldAccuracy = bayse.TestMails(TestMails);
 			//System.out.println("Fold "+i+" Fold start "+foldStart+" foldEnd "+foldEnd+" mails.size()-1 "+(mails.size()-1));
 			System.out.println("Accuracy for Fold "+i+": "+foldAccuracy);
