@@ -56,7 +56,7 @@ public class NaiveBayes {
 		
 		this.PriorHam = (double)hamMailsCount / (hamMailsCount + spamMailsCount);
 		this.PriorSpam = ((double)spamMailsCount) / (hamMailsCount + spamMailsCount);
-		System.out.print("P(HAM): " + PriorHam +" P(SPAM) " + PriorSpam);
+		//System.out.print("P(HAM): " + PriorHam +" P(SPAM) " + PriorSpam);
 	}
 	
 	public double GetProbabilityWord(String word, boolean isSpam){
@@ -84,6 +84,17 @@ public class NaiveBayes {
 		}	
 	}
 	
+	public double TestMails(List<Mail> mails){
+		int count=0;
+		for (Mail mail : mails) {
+			if(mail.isSpam == PredictIfSpam(mail)){
+				count++;
+			}
+		}
+		return (double)count/mails.size();
+	}
+	
+	
 	public boolean PredictIfSpam(Mail mail){
 		double spamWordLikelihood;
 		double hamWordLikelihood;
@@ -107,21 +118,21 @@ public class NaiveBayes {
 			hamlogLikelihood+=Math.log(hamWordLikelihood);
 			tempCount++;
 			if (tempCount==maxcount){
-				System.out.println("Spam probability at count "+maxcount+": " + Math.exp(spamWordLikelihood));
-				System.out.println("Ham probability at count "+maxcount+": " + Math.exp(hamWordLikelihood));
+				//System.out.println("Spam probability at count "+maxcount+": " + Math.exp(spamWordLikelihood));
+				//System.out.println("Ham probability at count "+maxcount+": " + Math.exp(hamWordLikelihood));
 			}
 		}
 
-		System.out.println("Spam likehood log: " + spamlogLikelihood);
-		System.out.println("Ham likehood log: " + hamlogLikelihood);
+		//System.out.println("Spam likehood log: " + spamlogLikelihood);
+		//System.out.println("Ham likehood log: " + hamlogLikelihood);
 
 		//System.out.println("Total Spams "+spamWords.keySet().size()+" Total Hams " + hamWords.keySet().size());
 		if(spamlogLikelihood>hamlogLikelihood){
-			System.out.println("Email is SPAM");
+			//System.out.println("Email is SPAM");
 			return true;
 		}
 		else{
-			System.out.println("Email is HAM");
+			//System.out.println("Email is HAM");
 			return false;
 		}
 	}
