@@ -21,12 +21,13 @@ public class Init {
 		bayse.PredictIfSpam(testMail);
 		//=======================================
 		ArrayList<Mail> AllMails = processDataFiles("bin\\Mails");
-		double Accuracy=ModelValidations.CrossValidateKFold(AllMails,10);
-		System.out.println("Average Accuracy Overall: "+Accuracy);
+		double Accuracy=0;
+		//Accuracy=ModelValidations.CrossValidateKFold(AllMails,10);
+		//System.out.println("Average Accuracy Overall: "+Accuracy);
 		Accuracy=ModelValidations.StratifiedKFold(AllMails,10);
 		System.out.println("Average Accuracy Overall: "+Accuracy);
-		Accuracy=ModelValidations.RandomClassifier(AllMails);
-		System.out.println("Average Accuracy Overall: "+Accuracy);
+		//Accuracy=ModelValidations.RandomClassifier(AllMails);
+		//System.out.println("Average Accuracy Overall: "+Accuracy);
 	}
 	
 	private static ArrayList<Mail> processDataFiles(String location) throws IOException, MessagingException {
