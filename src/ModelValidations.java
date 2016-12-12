@@ -68,4 +68,20 @@ public class ModelValidations {
 		return KFoldTest(StratifiedMails, folds);
 	}
 	
+	public static double RandomClassifier(List<Mail> mails){
+		System.out.println("===Random Classifier==");
+		int count=0;
+		for (Mail mail : mails) {
+			boolean ClassifiedasSpam=false;
+			if (Math.random()>0.5){
+				ClassifiedasSpam=true;
+			}
+			//===
+			if(mail.isSpam == ClassifiedasSpam){
+				count++;
+			}
+		}
+		return (double)count/mails.size();
+	}
+	
 }
