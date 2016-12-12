@@ -16,15 +16,15 @@ public class Init {
 	public static void main(String[] args) throws IOException, MessagingException {
 		ArrayList<Mail> mails = processDataFiles("bin\\Mails");
 		NaiveBayes bayse = new NaiveBayes();
-		bayse.Train(mails);
+		bayse.Train(1,mails);
 		Mail testMail = processDataFiles("bin\\TestMails").get(0);
-		bayse.PredictIfSpam(testMail);
+		bayse.PredictIfSpamMultivariate(testMail);
 		//=======================================
 		ArrayList<Mail> AllMails = processDataFiles("bin\\Mails");
 		double Accuracy=0;
 		//Accuracy=ModelValidations.CrossValidateKFold(AllMails,10);
 		//System.out.println("Average Accuracy Overall: "+Accuracy);
-		Accuracy=ModelValidations.StratifiedKFold(AllMails,10);
+		Accuracy=ModelValidations.StratifiedKFold(0,AllMails,10);
 		System.out.println("Average Accuracy Overall: "+Accuracy);
 		//Accuracy=ModelValidations.RandomClassifier(AllMails);
 		//System.out.println("Average Accuracy Overall: "+Accuracy);

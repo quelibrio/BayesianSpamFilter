@@ -3,16 +3,18 @@ import java.util.Collections;
 import java.util.List;
 
 public class ModelValidations {
-	public static double CrossValidateKFold(List<Mail> mails, int folds) {
+	//testTypes: 0-Multinomial, 1-Multivariate.
+	public static double CrossValidateKFold(int testType, List<Mail> mails, int folds) {
+		System.out.println("===Cross Validate K-Fold===");
 		System.out.println("===Cross Validate K-Fold===");
 		//=======
 		Collections.shuffle(mails);
 		//=======
-		return KFoldTest(mails, folds);
+		return KFoldTest(testType,mails, folds);
 	}
 	
-	private static double KFoldTest(List<Mail> mails, int folds) {
-		
+	private static double KFoldTest(int testType, List<Mail> mails, int folds) {
+		//testTypes: 0-Multinomial, 1-Multivariate.
 		double accuracySum=0.0;
 		for (int i=0;i<folds;i++){
 			int foldStart=i*mails.size()/folds;
@@ -26,9 +28,10 @@ public class ModelValidations {
 				TrainMails.addAll(mails.subList(foldEnd+1, mails.size()-1));
 			}
 			NaiveBayes bayse = new NaiveBayes();
-			bayse.Train(TrainMails);
-			//bayse.TrainMultinomial(TrainMails);
-			double foldAccuracy = bayse.TestMails(TestMails);
+			double foldAccuracy=0.0;
+			foldAccuracy = bayse.TrainAndTest(testType,TrainMails,TestMails);
+			//bayse.Train(testType,TrainMails);
+			//foldAccuracy = bayse.TestMails(testType,TestMails);
 			//System.out.println("Fold "+i+" Fold start "+foldStart+" foldEnd "+foldEnd+" mails.size()-1 "+(mails.size()-1));
 			System.out.println("Accuracy for Fold "+i+": "+foldAccuracy);
 			accuracySum+=foldAccuracy;
@@ -36,7 +39,7 @@ public class ModelValidations {
 		return accuracySum/folds;
 	}
 	
-	public static double StratifiedKFold(List<Mail> mails, int folds) {
+	public static double StratifiedKFold(int testType, List<Mail> mails, int folds) {
 		System.out.println("===Stratified K-Fold===");
 		List<Mail> HamMails= new ArrayList<Mail>();
 		List<Mail> SpamMails= new ArrayList<Mail>();
@@ -66,7 +69,7 @@ public class ModelValidations {
 			StratifiedMails.addAll(StratifiedSubMails);
 		}
 		
-		return KFoldTest(StratifiedMails, folds);
+		return KFoldTest(testType,StratifiedMails, folds);
 	}
 	
 	public static double RandomClassifier(List<Mail> mails){
