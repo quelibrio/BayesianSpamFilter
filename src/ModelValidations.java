@@ -2,9 +2,11 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import javax.naming.spi.DirStateFactory.Result;
+
 public class ModelValidations {
 	//testTypes: 0-Multinomial, 1-Multivariate.
-	public static double CrossValidateKFold(int testType, List<Mail> mails, int folds) {
+	public static double CrossValidateKFold(int testType, List<Mail> mails, int folds) throws Exception {
 		System.out.println("===Cross Validate K-Fold===");
 		System.out.println("===Cross Validate K-Fold===");
 		//=======
@@ -13,7 +15,7 @@ public class ModelValidations {
 		return KFoldTest(testType,mails, folds);
 	}
 	
-	private static double KFoldTest(int testType, List<Mail> mails, int folds) {
+	private static double KFoldTest(int testType, List<Mail> mails, int folds) throws Exception {
 		//testTypes: 0-Multinomial, 1-Multivariate.
 		double accuracySum=0.0;
 		for (int i=0;i<folds;i++){
@@ -27,19 +29,19 @@ public class ModelValidations {
 			if(i<folds-1){
 				TrainMails.addAll(mails.subList(foldEnd+1, mails.size()-1));
 			}
-			NaiveBayes bayse = new NaiveBayes();
-			double foldAccuracy=0.0;
-			foldAccuracy = bayse.TrainAndTest(testType,TrainMails,TestMails);
+
+			TestResult result = TrainAndTest(testType,TrainMails,TestMails);
 			//bayse.Train(testType,TrainMails);
 			//foldAccuracy = bayse.TestMails(testType,TestMails);
 			//System.out.println("Fold "+i+" Fold start "+foldStart+" foldEnd "+foldEnd+" mails.size()-1 "+(mails.size()-1));
-			System.out.println("Accuracy for Fold "+i+": "+foldAccuracy);
-			accuracySum+=foldAccuracy;
+			System.out.println("TP TN FP FN"+ i + ": " + result.truePositive + " " + result.trueNegative + " " + result.falsePositive + " " + result.falseNegative );
+			System.out.println("Accuracy for Fold " + result.GetAccuracy() + " " + result.precission + " " + result.recall + " " + result.f1Score());
+			accuracySum+=result.GetAccuracy();
 		}
 		return accuracySum/folds;
 	}
 	
-	public static double StratifiedKFold(int testType, List<Mail> mails, int folds) {
+	public static double StratifiedKFold(int testType, List<Mail> mails, int folds) throws Exception {
 		System.out.println("===Stratified K-Fold===");
 		List<Mail> HamMails= new ArrayList<Mail>();
 		List<Mail> SpamMails= new ArrayList<Mail>();
@@ -70,6 +72,52 @@ public class ModelValidations {
 		}
 		
 		return KFoldTest(testType,StratifiedMails, folds);
+	}
+	
+	public static TestResult TrainAndTest(int testType, List<Mail> trainMails, List<Mail> testMails) throws Exception{
+		NaiveBayes bayse = new NaiveBayes();
+		if (testType!=0 && testType!=1){
+			throw new Exception("Unspecified Test Type");
+		}
+		else{
+			bayse.Train(testType,trainMails);
+			return TestMails(testType,testMails);
+		}
+	}
+	
+	public static TestResult TestMails(int testType, List<Mail> mails){
+		NaiveBayes bayse = new NaiveBayes();
+		TestResult result= new TestResult();
+		result.dataSize = mails.size();
+		
+		for (Mail mail : mails) {
+			boolean prediction;
+			if (testType==0){
+				prediction = bayse.PredictIfSpamMultinomial(mail);
+			}
+			else{
+				prediction = bayse.PredictIfSpamMultivariate(mail);
+			}
+			
+			if(mail.isSpam){
+				if(mail.isSpam == prediction){
+					result.truePositive++;
+				}else{
+					result.falseNegative++;
+				}
+			} if(mail.isSpam == false){
+				if(mail.isSpam == prediction){
+					result.trueNegative++;
+				}else{
+					result.falsePositive++;
+				}
+			}
+		}
+		result.getPrecissionAndRecall();
+		
+		//System.out.println("coint and true positive true negative" +  " " + count + " " +  result.trueNegative + " " + result.truePositive);
+		//return (double)(result.truePositive + result.trueNegative)/mails.size();
+		return result;
 	}
 	
 	public static double RandomClassifier(List<Mail> mails){
