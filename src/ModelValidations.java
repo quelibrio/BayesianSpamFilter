@@ -6,8 +6,9 @@ import javax.naming.spi.DirStateFactory.Result;
 
 public class ModelValidations {
 	//testTypes: 0-Multinomial, 1-Multivariate.
+	NaiveBayes bayse = new NaiveBayes();
+	
 	public static double CrossValidateKFold(int testType, List<Mail> mails, int folds) throws Exception {
-		System.out.println("===Cross Validate K-Fold===");
 		System.out.println("===Cross Validate K-Fold===");
 		//=======
 		Collections.shuffle(mails);
@@ -34,7 +35,7 @@ public class ModelValidations {
 			//bayse.Train(testType,TrainMails);
 			//foldAccuracy = bayse.TestMails(testType,TestMails);
 			//System.out.println("Fold "+i+" Fold start "+foldStart+" foldEnd "+foldEnd+" mails.size()-1 "+(mails.size()-1));
-			System.out.println("TP TN FP FN"+ i + ": " + result.truePositive + " " + result.trueNegative + " " + result.falsePositive + " " + result.falseNegative );
+			System.out.println("TP TN FP FN for "+ i + ": " + result.truePositive + " " + result.trueNegative + " " + result.falsePositive + " " + result.falseNegative );
 			System.out.println("Accuracy for Fold " + result.GetAccuracy() + " " + result.precission + " " + result.recall + " " + result.f1Score());
 			accuracySum+=result.GetAccuracy();
 		}
@@ -81,44 +82,56 @@ public class ModelValidations {
 		}
 		else{
 			bayse.Train(testType,trainMails);
-			return TestMails(testType,testMails);
+			TestResult result= new TestResult();
+			result.dataSize = testMails.size();
+			
+			for (Mail mail : testMails) {
+				boolean prediction;
+				if (testType==0){
+					prediction = bayse.PredictIfSpamMultinomial(mail);
+				}
+				else{
+					prediction = bayse.PredictIfSpamMultivariate(mail);
+				}
+				
+				/*if(mail.isSpam){
+					if(mail.isSpam == prediction){
+						result.truePositive++;
+					}else{
+						result.falseNegative++;
+					}
+				} if(mail.isSpam == false){
+					if(mail.isSpam == prediction){
+						result.trueNegative++;
+					}else{
+						result.falsePositive++;
+					}
+				}*/
+				if (mail.isSpam && prediction){
+					result.truePositive++;
+				}
+				else if (!mail.isSpam && !prediction){
+					result.trueNegative++;
+				}
+				else if (!mail.isSpam && prediction){
+					result.falsePositive++;
+				}
+				else{
+					result.falseNegative++;
+				}
+			}
+			result.getPrecissionAndRecall();
+			
+			//System.out.println("coint and true positive true negative" +  " " + count + " " +  result.trueNegative + " " + result.truePositive);
+			//return (double)(result.truePositive + result.trueNegative)/mails.size();
+			return result;
 		}
 	}
 	
-	public static TestResult TestMails(int testType, List<Mail> mails){
+	/*public static TestResult TestMails(int testType, List<Mail> mails){
 		NaiveBayes bayse = new NaiveBayes();
-		TestResult result= new TestResult();
-		result.dataSize = mails.size();
 		
-		for (Mail mail : mails) {
-			boolean prediction;
-			if (testType==0){
-				prediction = bayse.PredictIfSpamMultinomial(mail);
-			}
-			else{
-				prediction = bayse.PredictIfSpamMultivariate(mail);
-			}
-			
-			if(mail.isSpam){
-				if(mail.isSpam == prediction){
-					result.truePositive++;
-				}else{
-					result.falseNegative++;
-				}
-			} if(mail.isSpam == false){
-				if(mail.isSpam == prediction){
-					result.trueNegative++;
-				}else{
-					result.falsePositive++;
-				}
-			}
-		}
-		result.getPrecissionAndRecall();
-		
-		//System.out.println("coint and true positive true negative" +  " " + count + " " +  result.trueNegative + " " + result.truePositive);
-		//return (double)(result.truePositive + result.trueNegative)/mails.size();
-		return result;
-	}
+	}*/
 	
 	public static double RandomClassifier(List<Mail> mails){
 		System.out.println("===Random Classifier==");
