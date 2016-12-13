@@ -5,7 +5,7 @@ public class TestResult {
 	public int trueNegative;
 	public int falseNegative;
 	public int dataSize;
-	public double precission;
+	public double precision;
 	public double recall;
 	
 	public TestResult(){
@@ -17,18 +17,19 @@ public class TestResult {
 	}
 	
 	public void getPrecissionAndRecall(){
-		this.precission = 0.0000001;
-			if(truePositive > 0)
-				precission = truePositive / (truePositive + falsePositive) ;
+		//this.precission = 0.0000001;
+			//if(truePositive > 0)
+				precision = truePositive / (truePositive + falsePositive) ;
 		
-		this.recall = truePositive / (truePositive + falseNegative + 0.0000001);
+		recall = truePositive / (truePositive + falseNegative);
 	}
 	public double GetAccuracy(){
 		return (double)(this.truePositive + this.trueNegative)/this.dataSize;
 	}
 	public double f1Score(){
-		this.getPrecissionAndRecall();
-		return 2 * (precission*recall) / (precission + recall);
+		//this.getPrecissionAndRecall();
+		//return 2 * (precision*recall) / (precision + recall);
+		return 2 * (double)truePositive / (2*truePositive+falseNegative+falsePositive);
 	}
 }
 
