@@ -42,17 +42,6 @@ public class NaiveBayes {
 		}
 	}
 	
-	public double TrainAndTest(int testType, List<Mail> trainMails, List<Mail> testMails){
-		if (testType!=0 && testType!=1){
-			System.out.println("Unspecified Test Type");
-			return 0.0;
-		}
-		else{
-			Train(testType,trainMails);
-			return TestMails(testType,testMails);
-		}
-	}
-	
 	public void TrainMultivariate(List<Mail> mails){
 		for (Mail mail : mails) {
 			
@@ -107,24 +96,6 @@ public class NaiveBayes {
 		else{
 			return ((double)countInHam+1)/(hamMailsCount+1);
 		}	
-	}
-	
-	public double TestMails(int testType, List<Mail> mails){
-		int count=0;
-		for (Mail mail : mails) {
-			if (testType==0){
-				if(mail.isSpam == PredictIfSpamMultinomial(mail)){
-					count++;
-				}
-			}
-			else if (testType==1){
-				if(mail.isSpam == PredictIfSpamMultivariate(mail)){
-					count++;
-				}
-			}
-			
-		}
-		return (double)count/mails.size();
 	}
 	
 	

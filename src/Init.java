@@ -13,7 +13,7 @@ import java.util.Scanner;
 import javax.mail.MessagingException;
 
 public class Init {
-	public static void main(String[] args) throws IOException, MessagingException {
+	public static void main(String[] args) throws Exception {
 		ArrayList<Mail> mails = processDataFiles("bin\\Mails");
 		NaiveBayes bayse = new NaiveBayes();
 		bayse.Train(1,mails);
@@ -23,8 +23,10 @@ public class Init {
 		ArrayList<Mail> AllMails = processDataFiles("bin\\Mails");
 		double Accuracy=0;
 		//Accuracy=ModelValidations.CrossValidateKFold(AllMails,10);
-		//System.out.println("Average Accuracy Overall: "+Accuracy);
 		Accuracy=ModelValidations.StratifiedKFold(0,AllMails,10);
+		System.out.println("Average Accuracy Overall: "+Accuracy);
+		
+		Accuracy=ModelValidations.StratifiedKFold(1,AllMails,10);
 		System.out.println("Average Accuracy Overall: "+Accuracy);
 		//Accuracy=ModelValidations.RandomClassifier(AllMails);
 		//System.out.println("Average Accuracy Overall: "+Accuracy);
