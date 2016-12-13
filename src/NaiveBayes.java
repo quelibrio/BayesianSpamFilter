@@ -3,18 +3,14 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.commons.math3.util.CombinatoricsUtils;
-
 public class NaiveBayes {
-	int spamMailsCount = 0;
-	int hamMailsCount = 0;
+	int spamTotal, hamTotal;
+	int spamMailsCount, hamMailsCount;
+	double PriorHam, PriorSpam;
+	
 	public Map<String, Integer> spamWords;
 	public Map<String, Integer> hamWords;
 	public Map<String, Integer> allWords;
-	int spamTotal;
-	int hamTotal;
-	double PriorHam;
-	double PriorSpam;
 	
 	//====Thing to add:
 	/*
@@ -29,8 +25,21 @@ public class NaiveBayes {
 		this.spamWords = new HashMap<String, Integer>();
 		this.hamWords = new HashMap<String, Integer>();
 		this.allWords = new HashMap<String, Integer>();
+		spamMailsCount = 0;
+		hamMailsCount = 0;
 		spamTotal=0;
 		hamTotal=0;
+		PriorHam=0;
+		PriorSpam=0;
+	}
+	
+	public void Train(int testType, List<Mail> mails){
+		if (testType==0){
+			TrainMultinomial(mails);
+		}
+		else if (testType==1){
+			TrainMultivariate(mails);
+		}
 	}
 	
 	public double TrainAndTest(int testType, List<Mail> trainMails, List<Mail> testMails){
@@ -41,15 +50,6 @@ public class NaiveBayes {
 		else{
 			Train(testType,trainMails);
 			return TestMails(testType,testMails);
-		}
-	}
-	
-	public void Train(int testType, List<Mail> mails){
-		if (testType==0){
-			TrainMultinomial(mails);
-		}
-		else if (testType==1){
-			TrainMultivariate(mails);
 		}
 	}
 	
@@ -244,6 +244,5 @@ public class NaiveBayes {
 			return false;
 		}
 		//==============
-		
 	}
 }
