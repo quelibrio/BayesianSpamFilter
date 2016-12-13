@@ -36,9 +36,9 @@ public class ModelValidations {
 			//bayse.Train(testType,TrainMails);
 			//foldAccuracy = bayse.TestMails(testType,TestMails);
 			//System.out.println("Fold "+i+" Fold start "+foldStart+" foldEnd "+foldEnd+" mails.size()-1 "+(mails.size()-1));
-			System.out.println("TP TN FP FN for "+ i + ": " + result.truePositive + " " + result.trueNegative + " " + result.falsePositive + " " + result.falseNegative );
+			//System.out.println("TP TN FP FN for "+ i + ": " + result.truePositive + " " + result.trueNegative + " " + result.falsePositive + " " + result.falseNegative );
 			System.out.println("Accuracy for Fold " + i + ": " + result.GetAccuracy());
-			System.out.println("F1 for Fold "+ i + ": " +result.f1Score());
+			//System.out.println("F1 for Fold "+ i + ": " +result.f1Score());
 			accuracySum+=result.GetAccuracy();
 			f1Sum+=result.f1Score();
 		}
@@ -126,7 +126,7 @@ public class ModelValidations {
 			}
 			result.getPrecissionAndRecall();
 			
-			//System.out.println("coint and true positive true negative" +  " " + count + " " +  result.trueNegative + " " + result.truePositive);
+			System.out.println("Precission and recall" +  " " + result.precision + " " + result.recall);
 			//return (double)(result.truePositive + result.trueNegative)/mails.size();
 			return result;
 		}

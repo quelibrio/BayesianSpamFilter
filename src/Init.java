@@ -22,7 +22,6 @@ public class Init {
 		//=======================================
 		ArrayList<Mail> AllMails = processDataFiles("bin\\Mails");
 		double Accuracy=0;
-		//Accuracy=ModelValidations.CrossValidateKFold(AllMails,10);
 		//Accuracy=ModelValidations.StratifiedKFold(0,AllMails,10);
 		//System.out.println("Average Accuracy Overall: "+Accuracy);
 		
