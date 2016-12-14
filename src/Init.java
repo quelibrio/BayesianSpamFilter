@@ -9,41 +9,32 @@ import javax.mail.MessagingException;
 
 public class Init {
 	public static void main(String[] args) throws Exception {
-		ArrayList<Mail> mails = processDataFiles("bin\\Mails");
-		
+		//ArrayList<Mail> mails = processDataFiles("bin\\Mails");
 		//This part has to be used only for training first time to create file with training data
 		
 //		NaiveBayes bayse = new NaiveBayes();
 //		bayse.Train(1,mails);
-//		ModelSerialization serializer = new ModelSerialization("bayesModel.ser");
+		ModelSerialization serializer = new ModelSerialization("bayesModel.ser");
 //		serializer.Serialize(bayse);
 		
 		//Test reading
-		//NaiveBayes bayseDeserialized =  serializer.Deserialize();
+		NaiveBayes bayseDeserialized =  serializer.Deserialize();
 		
-		//Mail testMail = processDataFiles("bin\\TestMails").get(0);
-		//bayse.PredictIfSpamMultivariate(testMail);
+		Mail testMail = processDataFiles("bin\\TestMails").get(0);
+		boolean predicted = bayseDeserialized.PredictIfSpamMultivariate(testMail);
+		System.out.println("Predicted: "+predicted);
 		//=======================================
-		ArrayList<Mail> AllMails = processDataFiles("bin\\Mails");
-		double Accuracy=0;
+		//ArrayList<Mail> AllMails = null;
+		//AllMails = processDataFiles("bin\\Mails");
+		//double Accuracy=0;
 		//Why multivariate give better results than multinomial
-		Accuracy=ModelValidations.StratifiedKFold(1 ,AllMails,10);
-		System.out.println("Average Accuracy Overall: "+Accuracy);
+//		Accuracy=ModelValidations.StratifiedKFold(1 ,AllMails,10);
+//		System.out.println("Average Accuracy Overall: "+Accuracy);
 		
 		//Accuracy=ModelValidations.StratifiedKFold(1,AllMails,10);
 		//System.out.println("Average Accuracy Overall: "+Accuracy);
 		//Accuracy=ModelValidations.RandomClassifier(AllMails);
 		//System.out.println("Average Accuracy Overall: "+Accuracy);
-		/*String word  = "Pizza15Box@thisisme.com";
-		System.out.println("Stem of word: "+word+" is :"+ Stemmer.stemString(word));
-		if (word.matches(".*\\d.*")){
-			System.out.println("WORD HAD NUMBER ");
-		}
-		else{
-			System.out.println("WORD DIDNT HAVE NUMBER");
-		}
-		String[] parts = word.split("@");
-		System.out.println("Domain name: "+parts[1]);*/
 	}
 	
 	private static ArrayList<Mail> processDataFiles(String location) throws IOException, MessagingException {
