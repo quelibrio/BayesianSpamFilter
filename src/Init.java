@@ -9,15 +9,25 @@ import javax.mail.MessagingException;
 
 public class Init {
 	public static void main(String[] args) throws Exception {
-		/*ArrayList<Mail> mails = processDataFiles("bin\\Mails");
-		NaiveBayes bayse = new NaiveBayes();
-		bayse.Train(1,mails);
-		Mail testMail = processDataFiles("bin\\TestMails").get(0);
-		bayse.PredictIfSpamMultivariate(testMail);*/
+		ArrayList<Mail> mails = processDataFiles("bin\\Mails");
+		
+		//This part has to be used only for training first time to create file with training data
+		
+//		NaiveBayes bayse = new NaiveBayes();
+//		bayse.Train(1,mails);
+//		ModelSerialization serializer = new ModelSerialization("bayesModel.ser");
+//		serializer.Serialize(bayse);
+		
+		//Test reading
+		//NaiveBayes bayseDeserialized =  serializer.Deserialize();
+		
+		//Mail testMail = processDataFiles("bin\\TestMails").get(0);
+		//bayse.PredictIfSpamMultivariate(testMail);
 		//=======================================
 		ArrayList<Mail> AllMails = processDataFiles("bin\\Mails");
 		double Accuracy=0;
-		Accuracy=ModelValidations.StratifiedKFold(0,AllMails,10);
+		//Why multivariate give better results than multinomial
+		Accuracy=ModelValidations.StratifiedKFold(1 ,AllMails,10);
 		System.out.println("Average Accuracy Overall: "+Accuracy);
 		
 		//Accuracy=ModelValidations.StratifiedKFold(1,AllMails,10);

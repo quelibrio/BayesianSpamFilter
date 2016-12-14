@@ -1,10 +1,11 @@
 import java.io.File;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class NaiveBayes {
+public class NaiveBayes  implements Serializable {
 	int spamTotal, hamTotal;
 	int spamMailsCount, hamMailsCount;
 	double PriorHam, PriorSpam;
@@ -24,16 +25,18 @@ public class NaiveBayes {
 	 */
 	
 	public NaiveBayes(){
-		this.spamWords = new HashMap<String, Integer>();
-		this.hamWords = new HashMap<String, Integer>();
-		this.allWords = new HashMap<String, Integer>();
+		useHeaders=true;
+		
 		spamMailsCount = 0;
 		hamMailsCount = 0;
 		spamTotal=0;
 		hamTotal=0;
 		PriorHam=0;
 		PriorSpam=0;
-		useHeaders=true;
+		
+		this.spamWords = new HashMap<String, Integer>();
+		this.hamWords = new HashMap<String, Integer>();
+		this.allWords = new HashMap<String, Integer>();
 	}
 	
 	public void Train(int testType, List<Mail> mails){

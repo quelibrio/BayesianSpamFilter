@@ -6,7 +6,6 @@ import javax.naming.spi.DirStateFactory.Result;
 
 public class ModelValidations {
 	//testTypes: 0-Multinomial, 1-Multivariate.
-	NaiveBayes bayse = new NaiveBayes();
 	
 	public static double CrossValidateKFold(int testType, List<Mail> mails, int folds) throws Exception {
 		System.out.println("===Cross Validate K-Fold===");
@@ -83,12 +82,13 @@ public class ModelValidations {
 	}
 	
 	public static TestResult TrainAndTest(int testType, List<Mail> trainMails, List<Mail> testMails) throws Exception{
-		NaiveBayes bayse = new NaiveBayes();
+		ModelSerialization serializer = new ModelSerialization("bayesModel.ser");
+		NaiveBayes bayse = serializer.Deserialize();
 		if (testType!=0 && testType!=1){
 			throw new Exception("Unspecified Test Type");
 		}
 		else{
-			bayse.Train(testType,trainMails);
+			//bayse.Train(testType,trainMails);
 			bayse.RemoveNeutralWords();
 			TestResult result= new TestResult();
 			result.dataSize = testMails.size();
