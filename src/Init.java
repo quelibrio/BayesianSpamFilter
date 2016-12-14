@@ -23,8 +23,9 @@ public class Init {
 			String path = args[0];
 			NaiveBayes bayseDeserialized =  serializer.Deserialize();
 			Mail testMail = processFilePath(path);
-			boolean predicted = bayseDeserialized.PredictIfSpamMultivariate(testMail);
-			System.out.println("Predicted: "+predicted);
+			boolean isSpam = bayseDeserialized.PredictIfSpamMultivariate(testMail);
+			String hamOrSpam = isSpam ? "spam" : "ham";
+			System.out.println(hamOrSpam + "\n");
 		}
 		//=======================================
 		else{
