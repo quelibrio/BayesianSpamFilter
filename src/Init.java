@@ -9,15 +9,15 @@ import javax.mail.MessagingException;
 
 public class Init {
 	public static void main(String[] args) throws Exception {
-		ArrayList<Mail> mails = processDataFiles("bin\\Mails");
+		/*ArrayList<Mail> mails = processDataFiles("bin\\Mails");
 		NaiveBayes bayse = new NaiveBayes();
 		bayse.Train(1,mails);
 		Mail testMail = processDataFiles("bin\\TestMails").get(0);
-		bayse.PredictIfSpamMultivariate(testMail);
+		bayse.PredictIfSpamMultivariate(testMail);*/
 		//=======================================
 		ArrayList<Mail> AllMails = processDataFiles("bin\\Mails");
 		double Accuracy=0;
-		Accuracy=ModelValidations.StratifiedKFold(0,AllMails,10);
+		Accuracy=ModelValidations.StratifiedKFold(1,AllMails,10);
 		System.out.println("Average Accuracy Overall: "+Accuracy);
 		
 		//Accuracy=ModelValidations.StratifiedKFold(1,AllMails,10);

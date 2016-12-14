@@ -1,4 +1,5 @@
 import java.io.File;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -40,6 +41,34 @@ public class NaiveBayes {
 		else if (testType==1){
 			TrainMultivariate(mails);
 		}
+	}
+	
+	public void RemoveNeutralWords(){
+		//clone spamwords:
+		List<String> HamWordsCopy= new ArrayList<String>();
+		for (String word: spamWords.keySet()){
+			HamWordsCopy.add(word);
+		}
+		int count=0;
+		double diffsum = 0.0;
+		for(String word: HamWordsCopy){
+			if (hamWords.containsKey(word)){
+				double threshold = 0.80;
+				double difference = (double)spamWords.get(word)/hamWords.get(word);
+				if (threshold<difference && difference<1.0/threshold){
+					spamWords.remove(word);
+					hamWords.remove(word);
+					count++;
+					if (threshold<difference){
+						diffsum+=difference;
+					}
+					else{
+						diffsum+=(double)hamWords.get(word)/spamWords.get(word);;
+					}
+				}
+			}
+		}
+		System.out.println("Removed " + count + " words in RemoveNeutralWords. Diff Average: "+diffsum/count);
 	}
 	
 	public void TrainMultivariate(List<Mail> mails){
