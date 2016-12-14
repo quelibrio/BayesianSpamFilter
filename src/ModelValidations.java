@@ -61,8 +61,8 @@ public class ModelValidations {
 				HamMails.add(mail);
 			}
 		}
-		Collections.shuffle(HamMails);
-		Collections.shuffle(SpamMails);
+		//Collections.shuffle(HamMails);
+		//Collections.shuffle(SpamMails);
 		List<Mail> StratifiedMails= new ArrayList<Mail>();
 		for (int i=0;i<folds;i++){
 			List<Mail> StratifiedSubMails= new ArrayList<Mail>();
@@ -75,7 +75,7 @@ public class ModelValidations {
 			foldEnd=((i+1)*SpamMails.size()/folds)-1;
 			StratifiedSubMails.addAll(SpamMails.subList(foldStart, foldEnd));
 			//===
-			Collections.shuffle(StratifiedSubMails);
+			//Collections.shuffle(StratifiedSubMails);
 			StratifiedMails.addAll(StratifiedSubMails);
 		}
 		

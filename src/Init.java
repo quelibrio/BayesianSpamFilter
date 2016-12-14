@@ -17,13 +17,23 @@ public class Init {
 		//=======================================
 		ArrayList<Mail> AllMails = processDataFiles("bin\\Mails");
 		double Accuracy=0;
-		Accuracy=ModelValidations.StratifiedKFold(1,AllMails,10);
+		Accuracy=ModelValidations.StratifiedKFold(0,AllMails,10);
 		System.out.println("Average Accuracy Overall: "+Accuracy);
 		
 		//Accuracy=ModelValidations.StratifiedKFold(1,AllMails,10);
 		//System.out.println("Average Accuracy Overall: "+Accuracy);
 		//Accuracy=ModelValidations.RandomClassifier(AllMails);
 		//System.out.println("Average Accuracy Overall: "+Accuracy);
+		/*String word  = "Pizza15Box@thisisme.com";
+		System.out.println("Stem of word: "+word+" is :"+ Stemmer.stemString(word));
+		if (word.matches(".*\\d.*")){
+			System.out.println("WORD HAD NUMBER ");
+		}
+		else{
+			System.out.println("WORD DIDNT HAVE NUMBER");
+		}
+		String[] parts = word.split("@");
+		System.out.println("Domain name: "+parts[1]);*/
 	}
 	
 	private static ArrayList<Mail> processDataFiles(String location) throws IOException, MessagingException {

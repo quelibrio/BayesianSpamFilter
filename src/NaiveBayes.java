@@ -8,6 +8,7 @@ public class NaiveBayes {
 	int spamTotal, hamTotal;
 	int spamMailsCount, hamMailsCount;
 	double PriorHam, PriorSpam;
+	boolean useHeaders;
 	
 	public Map<String, Integer> spamWords;
 	public Map<String, Integer> hamWords;
@@ -15,7 +16,7 @@ public class NaiveBayes {
 	
 	//====Thing to add:
 	/*
-	 * 1-StopWords (words that are too general)
+	 * 1*-StopWords (words that are too general)
 	 * 2-Headers (domain names etc.)
 	 * 3-Phrases (Combination of words)
 	 * 4-likelihood ratios (leaning towards classifying ham than spam)
@@ -32,6 +33,7 @@ public class NaiveBayes {
 		hamTotal=0;
 		PriorHam=0;
 		PriorSpam=0;
+		useHeaders=true;
 	}
 	
 	public void Train(int testType, List<Mail> mails){
@@ -83,6 +85,9 @@ public class NaiveBayes {
 					else{
 						spamWords.put(word, 1);
 					}
+				}
+				if (useHeaders){
+					
 				}
 			}
 			else {

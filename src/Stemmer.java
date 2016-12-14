@@ -434,7 +434,7 @@ class Stemmer
     	  
       }
 
-      System.out.println(builder.toString());
+      //System.out.println(builder.toString());
       return builder.toString();
    }
 }

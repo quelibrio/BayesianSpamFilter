@@ -19,9 +19,9 @@ public class TestResult {
 	public void getPrecissionAndRecall(){
 		//this.precission = 0.0000001;
 			//if(truePositive > 0)
-				precision = truePositive / (truePositive + falsePositive) ;
+				/*precision = truePositive / (truePositive + falsePositive) ;
 		
-		recall = truePositive / (truePositive + falseNegative);
+		recall = truePositive / (truePositive + falseNegative);*/
 	}
 	public double GetAccuracy(){
 		return (double)(this.truePositive + this.trueNegative)/this.dataSize;
