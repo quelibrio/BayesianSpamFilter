@@ -1,14 +1,9 @@
-import java.io.Console;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.IOException;
-import java.io.Reader;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Scanner;
+
 
 import javax.mail.MessagingException;
 
@@ -22,8 +17,8 @@ public class Init {
 		//=======================================
 		ArrayList<Mail> AllMails = processDataFiles("bin\\Mails");
 		double Accuracy=0;
-		//Accuracy=ModelValidations.StratifiedKFold(0,AllMails,10);
-		//System.out.println("Average Accuracy Overall: "+Accuracy);
+		Accuracy=ModelValidations.StratifiedKFold(0,AllMails,10);
+		System.out.println("Average Accuracy Overall: "+Accuracy);
 		
 		Accuracy=ModelValidations.StratifiedKFold(1,AllMails,10);
 		System.out.println("Average Accuracy Overall: "+Accuracy);
@@ -61,7 +56,7 @@ public class Init {
 	    byte[] data = new byte[(int) file.length()];
 	    fis.read(data);
 	    fis.close();
-	    
+	 
 	    Mail mail; 
 	    String messageData = new String(data);
 	    if(path.contains("ham")){

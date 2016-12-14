@@ -31,7 +31,11 @@ public class Mail {
 		message.getAllHeaderLines();
 		
 		String parsedBody = message.getContent().toString();
-		this.body =  Jsoup.parse(parsedBody).text();
+		
+	
+		String htmlStripped = Jsoup.parse(parsedBody).text();
+	    String stemmedContent = Stemmer.stemString(htmlStripped);
+		this.body =  stemmedContent;
 		
 		String[] words = body.split("\\W+");
 		for (String w : words) {
@@ -51,7 +55,8 @@ public class Mail {
 		//Extract headers
 		for (Enumeration<Header> e = message.getAllHeaders(); e.hasMoreElements();) {
 		    Header h = e.nextElement();
-		    //System.out.println(h.getName() + " $#$ " +    h.getValue());
+//		    if(h.getName().contains("ceive"))
+//		    	System.out.println(h.getName() + " $#$ " +    h.getValue());
 
 		}
 		System.out.println("><><><><><><><><><><><><>End of message<><><><><><><><><><><><><><><");
