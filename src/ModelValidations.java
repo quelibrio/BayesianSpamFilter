@@ -20,6 +20,7 @@ public class ModelValidations {
 		//testTypes: 0-Multinomial, 1-Multivariate.
 		double accuracySum=0.0;
 		double f1Sum=0.0;
+		double hamf1Sum=0.0;
 		for (int i=0;i<folds;i++){
 			int foldStart=i*mails.size()/folds;
 			int foldEnd=((i+1)*mails.size()/folds)-1;
@@ -41,8 +42,10 @@ public class ModelValidations {
 			//System.out.println("F1 for Fold "+ i + ": " +result.f1Score());
 			accuracySum+=result.GetAccuracy();
 			f1Sum+=result.f1Score();
+			hamf1Sum+=result.f1ScoreHam();
 		}
-		System.out.println("F1 Overall " + f1Sum/folds);
+		System.out.println("F1 (Spam) Overall " + f1Sum/folds);
+		System.out.println("F1 (Ham) Overall " + hamf1Sum/folds);
 		return accuracySum/folds;
 	}
 	
@@ -97,36 +100,27 @@ public class ModelValidations {
 				else{
 					prediction = bayse.PredictIfSpamMultivariate(mail);
 				}
-				
-				/*if(mail.isSpam){
-					if(mail.isSpam == prediction){
-						result.truePositive++;
-					}else{
-						result.falseNegative++;
-					}
-				} if(mail.isSpam == false){
-					if(mail.isSpam == prediction){
-						result.trueNegative++;
-					}else{
-						result.falsePositive++;
-					}
-				}*/
+				//========================================
 				if (mail.isSpam && prediction){
 					result.truePositive++;
+					//ham:TN
 				}
 				else if (!mail.isSpam && !prediction){
 					result.trueNegative++;
+					//ham:TP
 				}
 				else if (!mail.isSpam && prediction){
 					result.falsePositive++;
+					//ham:FN
 				}
 				else{
 					result.falseNegative++;
+					//ham:FP
 				}
 			}
 			result.getPrecissionAndRecall();
 			
-			System.out.println("Precission and recall" +  " " + result.precision + " " + result.recall);
+			//System.out.println("Precission and recall" +  " " + result.precision + " " + result.recall);
 			//return (double)(result.truePositive + result.trueNegative)/mails.size();
 			return result;
 		}

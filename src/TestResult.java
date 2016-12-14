@@ -31,5 +31,9 @@ public class TestResult {
 		//return 2 * (precision*recall) / (precision + recall);
 		return 2 * (double)truePositive / (2*truePositive+falseNegative+falsePositive);
 	}
+	
+	public double f1ScoreHam(){
+		return 2 * (double)trueNegative / (2*trueNegative+falseNegative+falsePositive);
+	}
 }
 

@@ -20,8 +20,8 @@ public class Init {
 		Accuracy=ModelValidations.StratifiedKFold(0,AllMails,10);
 		System.out.println("Average Accuracy Overall: "+Accuracy);
 		
-		Accuracy=ModelValidations.StratifiedKFold(1,AllMails,10);
-		System.out.println("Average Accuracy Overall: "+Accuracy);
+		//Accuracy=ModelValidations.StratifiedKFold(1,AllMails,10);
+		//System.out.println("Average Accuracy Overall: "+Accuracy);
 		//Accuracy=ModelValidations.RandomClassifier(AllMails);
 		//System.out.println("Average Accuracy Overall: "+Accuracy);
 	}
