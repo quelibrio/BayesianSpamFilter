@@ -2,6 +2,8 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 
 
@@ -17,20 +19,21 @@ public class Init {
 		ModelSerialization serializer = new ModelSerialization("bayesModel.ser");
 //		serializer.Serialize(bayse);
 		
-		//Test reading
-		NaiveBayes bayseDeserialized =  serializer.Deserialize();
-		
-		Mail testMail = processDataFiles("bin\\TestMails").get(0);
-		boolean predicted = bayseDeserialized.PredictIfSpamMultivariate(testMail);
-		System.out.println("Predicted: "+predicted);
+		if(args.length > 0){
+			String path = args[0];
+			NaiveBayes bayseDeserialized =  serializer.Deserialize();
+			Mail testMail = processFilePath(path);
+			boolean predicted = bayseDeserialized.PredictIfSpamMultivariate(testMail);
+			System.out.println("Predicted: "+predicted);
+		}
 		//=======================================
-		//ArrayList<Mail> AllMails = null;
-		//AllMails = processDataFiles("bin\\Mails");
-		//double Accuracy=0;
-		//Why multivariate give better results than multinomial
-//		Accuracy=ModelValidations.StratifiedKFold(1 ,AllMails,10);
-//		System.out.println("Average Accuracy Overall: "+Accuracy);
-		
+		else{
+			ArrayList<Mail> AllMails = null;
+			AllMails = processDataFiles("bin\\Mails");
+			//Why multivariate give better results than multinomial
+			double Accuracy=ModelValidations.StratifiedKFold(1 ,AllMails,10);
+			System.out.println("Average Accuracy Overall: "+Accuracy);
+		}
 		//Accuracy=ModelValidations.StratifiedKFold(1,AllMails,10);
 		//System.out.println("Average Accuracy Overall: "+Accuracy);
 		//Accuracy=ModelValidations.RandomClassifier(AllMails);
@@ -59,6 +62,12 @@ public class Init {
 			}
 		}
 		return mails;
+	}
+	
+	public static Mail processFilePath(String filePath) throws IOException, MessagingException{
+		Path path = Paths.get(filePath);
+		Mail mail = GetMailFromFile(path.toFile());
+		return mail;
 	}
 	
 	private static Mail GetMailFromFile(File file) throws IOException, MessagingException{
