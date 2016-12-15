@@ -11,14 +11,14 @@ import javax.mail.MessagingException;
 
 public class filter {
 	public static void main(String[] args) throws Exception {
-		//ArrayList<Mail> mails = processDataFiles("bin\\Mails");
-		//This part has to be used only for training first time to create file with training data
-		
-//		NaiveBayes bayse = new NaiveBayes();
-//		bayse.Train(1,mails);
 		ModelSerialization serializer = new ModelSerialization("bayesModel.ser");
-//		serializer.Serialize(bayse);
-		
+		//This part has to be used only for training and serializing to a file
+		//It needs to be done once
+		/*ArrayList<Mail> mails = processDataFiles("bin\\Mails");
+		NaiveBayes bayse = new NaiveBayes();
+		bayse.Train(0, mails);
+		serializer.Serialize(bayse);*/
+
 		if(args.length > 0){
 			String path = args[0];
 			NaiveBayes bayseDeserialized =  serializer.Deserialize();
@@ -31,14 +31,15 @@ public class filter {
 		else{
 			ArrayList<Mail> AllMails = null;
 			AllMails = processDataFiles("bin\\Mails");
-			//Why multivariate give better results than multinomial
-			double Accuracy=ModelValidations.StratifiedKFold(1 ,AllMails,10);
+			
+			double Accuracy = ModelValidations.StratifiedKFold(0 ,AllMails, 10);
 			System.out.println("Average Accuracy Overall: "+Accuracy);
+			//Accuracy=ModelValidations.StratifiedKFold(1,AllMails,10);
+			//System.out.println("Average Accuracy Overall: "+Accuracy);
+			//Accuracy=ModelValidations.RandomClassifier(AllMails);
+			//System.out.println("Average Accuracy Overall: "+Accuracy);
 		}
-		//Accuracy=ModelValidations.StratifiedKFold(1,AllMails,10);
-		//System.out.println("Average Accuracy Overall: "+Accuracy);
-		//Accuracy=ModelValidations.RandomClassifier(AllMails);
-		//System.out.println("Average Accuracy Overall: "+Accuracy);
+
 	}
 	
 	private static ArrayList<Mail> processDataFiles(String location) throws IOException, MessagingException {
