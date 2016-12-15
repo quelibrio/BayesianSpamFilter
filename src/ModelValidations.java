@@ -82,15 +82,15 @@ public class ModelValidations {
 	}
 	
 	public static TestResult TrainAndTest(int testType, List<Mail> trainMails, List<Mail> testMails) throws Exception{
-		//ModelSerialization serializer = new ModelSerialization("bayesModel.ser");
-		//NaiveBayes bayse = serializer.Deserialize();
-		NaiveBayes bayse = new NaiveBayes();
+		ModelSerialization serializer = new ModelSerialization("bayesModel.ser");
+		NaiveBayes bayse = serializer.Deserialize();
+		//NaiveBayes bayse = new NaiveBayes();
 		if (testType!=0 && testType!=1){
 			throw new Exception("Unspecified Test Type");
 		}
 		else{
-			bayse.Train(testType,trainMails);
-			bayse.RemoveNeutralWords();
+			//bayse.Train(testType,trainMails);
+			//bayse.RemoveNeutralWords();
 			TestResult result= new TestResult();
 			result.dataSize = testMails.size();
 			

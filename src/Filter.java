@@ -14,10 +14,10 @@ public class filter {
 		ModelSerialization serializer = new ModelSerialization("bayesModel.ser");
 		//This part has to be used only for training and serializing to a file
 		//It needs to be done once
-		/*ArrayList<Mail> mails = processDataFiles("bin\\Mails");
-		NaiveBayes bayse = new NaiveBayes();
-		bayse.Train(0, mails);
-		serializer.Serialize(bayse);*/
+//		ArrayList<Mail> mails = processDataFiles("bin\\Mails");
+//		NaiveBayes bayse = new NaiveBayes();
+//		bayse.Train(0, mails);
+//		serializer.Serialize(bayse);
 
 		if(args.length > 0){
 			String path = args[0];
