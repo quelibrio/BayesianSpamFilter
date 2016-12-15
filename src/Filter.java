@@ -9,7 +9,7 @@ import java.util.ArrayList;
 
 import javax.mail.MessagingException;
 
-public class Init {
+public class Filter {
 	public static void main(String[] args) throws Exception {
 		//ArrayList<Mail> mails = processDataFiles("bin\\Mails");
 		//This part has to be used only for training first time to create file with training data
