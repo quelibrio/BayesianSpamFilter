@@ -85,12 +85,18 @@ public class ModelValidations {
 		//ModelSerialization serializer = new ModelSerialization("bayesModel.ser");
 		//NaiveBayes bayse = serializer.Deserialize();
 		NaiveBayes bayse = new NaiveBayes();
-		if (testType!=0 && testType!=1){
+		SimpleFeatureTree ftree = new SimpleFeatureTree();
+		if (testType!=0 && testType!=1 && testType!=2){
 			throw new Exception("Unspecified Test Type");
 		}
 		else{
-			bayse.Train(testType,trainMails);
-			bayse.RemoveNeutralWords();
+			if (testType==2){
+				ftree.InitTrain(trainMails);
+			}
+			else{
+				bayse.Train(testType,trainMails);
+				bayse.RemoveNeutralWords();
+			}
 			TestResult result= new TestResult();
 			result.dataSize = testMails.size();
 			
@@ -99,8 +105,11 @@ public class ModelValidations {
 				if (testType==0){
 					prediction = bayse.PredictIfSpamMultinomial(mail);
 				}
-				else{
+				else if (testType==1){
 					prediction = bayse.PredictIfSpamMultivariate(mail);
+				}
+				else{
+					prediction = ftree.Predict(mail);
 				}
 				//========================================
 				if (mail.isSpam && prediction){

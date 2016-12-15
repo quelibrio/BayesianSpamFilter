@@ -9,7 +9,7 @@ import java.util.ArrayList;
 
 import javax.mail.MessagingException;
 
-public class filter {
+public class Filter {
 	public static void main(String[] args) throws Exception {
 		//ArrayList<Mail> mails = processDataFiles("bin\\Mails");
 		//This part has to be used only for training first time to create file with training data
@@ -18,6 +18,7 @@ public class filter {
 //		bayse.Train(1,mails);
 		ModelSerialization serializer = new ModelSerialization("bayesModel.ser");
 //		serializer.Serialize(bayse);
+		//use "bin/TestMail/ham009.txt" as argument.
 		
 		if(args.length > 0){
 			String path = args[0];
@@ -32,7 +33,7 @@ public class filter {
 			ArrayList<Mail> AllMails = null;
 			AllMails = processDataFiles("bin\\Mails");
 			//Why multivariate give better results than multinomial
-			double Accuracy=ModelValidations.StratifiedKFold(1 ,AllMails,10);
+			double Accuracy=ModelValidations.StratifiedKFold(2 ,AllMails,10);
 			System.out.println("Average Accuracy Overall: "+Accuracy);
 		}
 		//Accuracy=ModelValidations.StratifiedKFold(1,AllMails,10);
