@@ -95,7 +95,7 @@ public class ModelValidations {
 			}
 			else{
 				bayse.Train(testType,trainMails);
-				bayse.RemoveNeutralWords();
+				//bayse.RemoveNeutralWords();
 			}
 			TestResult result= new TestResult();
 			result.dataSize = testMails.size();
