@@ -25,7 +25,7 @@ public class filter {
 			Mail testMail = processFilePath(path);
 			boolean isSpam = bayseDeserialized.PredictIfSpamMultinomial(testMail);
 			String hamOrSpam = isSpam ? "spam" : "ham";
-			System.out.println(hamOrSpam + "\n");
+			System.out.print(hamOrSpam + "\n");
 		}
 		//=======================================
 		else{
