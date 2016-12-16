@@ -1,6 +1,12 @@
+import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Map;
@@ -54,10 +60,15 @@ public class Mail {
 		//==========================================================
 		
 		String[] words = body.split("\\W+");
-		//System.out.println("==!!!BODY AS IT IS:" + body);
+		///Skipping words decrease accuracy
+		//ArrayList<String> stopWords = getStopWords();
+
 		for (String w : words) {
 			   w = w.toLowerCase();
+//			   if(isStopWord(w, stopWords))
+//				   continue;
 			   w=Stemmer.stemString(w);
+			   
 			   /*if (!w.matches(".*\\d.*")){
 			   }*/
 			   Integer n = wordsMap.get(w);
@@ -81,5 +92,27 @@ public class Mail {
 
 		}
 		//System.out.println("><><><><><><><><><><><><>End of message<><><><><><><><><><><><><><><");
+	}
+	public ArrayList<String> getStopWords(){
+		   ArrayList<String> words = new ArrayList<String>();
+		   try {
+				File file = new File("bin/stopwords.txt");
+				FileReader fileReader = new FileReader(file);
+				BufferedReader bufferedReader = new BufferedReader(fileReader);
+				
+				String line;
+				while ((line = bufferedReader.readLine()) != null) {
+					words.add(line);
+				}
+				fileReader.close();
+
+				
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		   return words;
+	}
+	public boolean isStopWord(String word, ArrayList<String> stopWords) throws FileNotFoundException{
+		   return stopWords.contains(word.toLowerCase());
 	}
 }
