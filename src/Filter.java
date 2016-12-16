@@ -13,17 +13,17 @@ public class filter {
 	public static void main(String[] args) throws Exception {
 		//ArrayList<Mail> mails = processDataFiles("bin\\Mails");
 		//This part has to be used only for training first time to create file with training data
-		
-		//bayse.Train(0,mails);
+		NaiveBayes bayseDeserialized;// = new NaiveBayes();
+		//bayseDeserialized.Train(0,mails);
 		ModelSerialization serializer = new ModelSerialization("bayesModel.ser");
-//		serializer.Serialize(bayse);
+		//serializer.Serialize(bayseDeserialized);
 		//use "bin/TestMail/ham009.txt" as argument.
 		
 		if(args.length > 0){
 			String path = args[0];
-			NaiveBayes bayseDeserialized =  serializer.Deserialize();
+			bayseDeserialized =  serializer.Deserialize();
 			Mail testMail = processFilePath(path);
-			boolean isSpam = bayseDeserialized.PredictIfSpamMultivariate(testMail);
+			boolean isSpam = bayseDeserialized.PredictIfSpamMultinomial(testMail);
 			String hamOrSpam = isSpam ? "spam" : "ham";
 			System.out.println(hamOrSpam + "\n");
 		}
